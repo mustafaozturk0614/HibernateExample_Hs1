@@ -2,6 +2,7 @@ package com.bilgeadam;
 
 import com.bilgeadam.entity.User;
 import com.bilgeadam.enums.EGender;
+import com.bilgeadam.utility.EntityManagerFactoryUtility;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.NoResultException;
@@ -13,6 +14,15 @@ import jakarta.persistence.criteria.Root;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+
+/*
+    LibraryManagmentSystem adlı bir hibernate projesi olusturalım  ve dokumantasyondaki entityleri yazalım.
+
+ */
+
+
+
+
 
 /*
       bir database olusturalım ==>  hs1UserDb adında
@@ -29,7 +39,7 @@ import java.util.Optional;
 public class Main {
     public static void main(String[] args) {
 
-        EntityManagerFactory emf= Persistence.createEntityManagerFactory("userexample");
+        EntityManagerFactory emf= EntityManagerFactoryUtility.getEntityManagerFactory();
         EntityManager entityManager=emf.createEntityManager();
         /*
             1- bir user olustrup databse e kayıt edelim
@@ -61,7 +71,7 @@ public class Main {
            // entityManager.getTransaction().rollback();
         }
 
-        
+
 
         /*
         1-CriteriaQuery
@@ -120,7 +130,6 @@ public class Main {
         CriteriaQuery<User> criteriaQuery=criteriaBuilder.createQuery(User.class);
         Root<User> root=criteriaQuery.from(User.class);
         criteriaQuery.select(root);
-
         List<User> userList= entityManager.createQuery(criteriaQuery).getResultList();
         userList.forEach(System.out::println);
     }
