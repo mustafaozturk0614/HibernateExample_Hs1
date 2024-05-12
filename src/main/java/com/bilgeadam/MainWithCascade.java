@@ -1,22 +1,21 @@
 package com.bilgeadam;
 
+import com.bilgeadam.entity.Address;
 import com.bilgeadam.entity.Post;
 import com.bilgeadam.entity.User;
+import com.bilgeadam.enums.EAddressType;
 import com.bilgeadam.enums.EGender;
+import com.bilgeadam.repository.AddressRepository;
 import com.bilgeadam.repository.PostRepository;
 import com.bilgeadam.repository.UserRepository;
-import com.bilgeadam.utility.EntityManagerFactoryUtility;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.NoResultException;
-import jakarta.persistence.Persistence;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.Month;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,9 +23,6 @@ import java.util.Optional;
     LibraryManagmentSystem adlı bir hibernate projesi olusturalım  ve dokumantasyondaki entityleri yazalım.
 
  */
-
-
-
 
 
 /*
@@ -41,7 +37,7 @@ import java.util.Optional;
             <property name="hibernate.format_sql" value="true" />
             <property name="hibernate.highlight_sql" value="true" />
    */
-public class Main {
+public class MainWithCascade {
     public static void main(String[] args) {
 
 //        EntityManagerFactory emf= EntityManagerFactoryUtility.getEntityManagerFactory();
@@ -69,20 +65,50 @@ public class Main {
         Post post=Post.builder().content("1. post").date(LocalDateTime.of(2024,3, 3,7,30)).user(user).build();
         Post post2=Post.builder().content("2. post").user(user).build();
         Post post3=Post.builder().content("3. post").user(user).build();
+         Address address1= Address.builder().addressType(EAddressType.HOME).city("Ankara").country("Türkiye").users(List.of(user)).build();
+         Address address2= Address.builder().addressType(EAddressType.WORK).city("İstanbul").country("Türkiye").users(List.of(user)).build();
+         Address address3= Address.builder().addressType(EAddressType.OTHER).city("Balıkesir").country("Türkiye").users(List.of(user)).build();
+         List<Address> addresses1=List.of(address1,address2,address3);
+
+         Address address4= Address.builder().addressType(EAddressType.HOME).city("İstanbul").country("Türkiye").users(List.of(user2)).build();
+         Address address5= Address.builder().addressType(EAddressType.WORK).city("İzmir").country("Türkiye").users(List.of(user2)).build();
+        List<Address> addresses2=List.of(address4,address5);
+
 
         UserRepository userRepository=new UserRepository();
         PostRepository postRepository=new PostRepository();
+        AddressRepository addressRepository=new AddressRepository();
+        user.setPosts(List.of(post,post2,post3));
+        user.setAddresses(addresses1);
+        user2.setAddresses(addresses2);
 
-        userRepository.saveAll(List.of(user,user2));
-        postRepository.saveAll(List.of(post,post2,post3));
-      //  user.setPosts(List.of(post,post2,post3));
-     //   userRepository.update(user);
-//        userRepository.findAll().forEach(System.out::println);
+
+
+       userRepository.saveAll(List.of(user,user2));
+//addressRepository.saveAll(addresses1);
+//addressRepository.saveAll(addresses2);
+
+   //    postRepository.saveAll(List.of(post,post2,post3));
+   // userRepository.deleteById(1L);
+
+        user.setPosts(List.of(post,post2,post3));
+       userRepository.update(user);
+///       userRepository.findAll().forEach(System.out::println);
 //
 //      Optional<User> user1  =userRepository.findById(1L);
 //        System.out.println(user1.get());
-        postRepository.findAll().forEach(System.out::println);
-        userRepository.findAll().forEach(System.out::println);
+     //   postRepository.findAll().forEach(System.out::println);
+  //      userRepository.findAll().forEach(System.out::println);
+
+
+        Optional<User> user1  =userRepository.findById(1L);
+        System.out.println(userRepository.getEm().isOpen());
+
+        List<Post> postList=postRepository.findPostsByUserId(user);
+        System.out.println("postListesi= "+postList);
+
+    //    System.out.println(user1.get().getPosts());
+
 
 //        entityManager=emf.createEntityManager();
 //        entityManager.getTransaction().begin();

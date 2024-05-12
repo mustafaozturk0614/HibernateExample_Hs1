@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "tbl_user")
@@ -33,7 +34,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     private EGender gender;
 
-    private String address;
+
 
     private int postCount;
 
@@ -41,5 +42,10 @@ public class User {
 
     @Transient
     private short age;
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    List<Post> posts;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    List<Address> addresses;
 
 }
