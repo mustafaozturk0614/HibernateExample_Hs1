@@ -1,5 +1,6 @@
 package com.bilgeadam;
 
+import com.bilgeadam.entity.Name;
 import com.bilgeadam.entity.Post;
 import com.bilgeadam.entity.User;
 import com.bilgeadam.enums.EGender;
@@ -50,17 +51,17 @@ public class Main {
             1- bir user olustrup databse e kayıt edelim
          */
         User user= User.builder()
-                   .firstName("Mustafa")
-                   .lastName("Öztürk")
-                   .username("mustafa222")
-                   .birthDate(LocalDate.parse("1987-10-12"))
-                   .postCount(18)
-                   .gender(EGender.MAN)
-                   .build();
+                .name(Name.builder().firstName("Mustafa")
+                        .lastName("Öztürk").build())
+                .username("mustafa222")
+                .birthDate(LocalDate.parse("1987-10-12"))
+                .postCount(18)
+                .gender(EGender.MAN)
+                .build();
 
         User user2= User.builder()
-                .firstName("Özge")
-                .lastName("Keskin")
+                .name(Name.builder().firstName("Özge")
+                        .lastName("Keskin").build())
                 .username("ozge")
                 .gender(EGender.WOMAN)
                 .postCount(8)

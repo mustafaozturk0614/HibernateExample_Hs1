@@ -1,10 +1,9 @@
 package com.bilgeadam;
 
-import com.bilgeadam.entity.Address;
-import com.bilgeadam.entity.Post;
-import com.bilgeadam.entity.User;
+import com.bilgeadam.entity.*;
 import com.bilgeadam.enums.EAddressType;
 import com.bilgeadam.enums.EGender;
+import com.bilgeadam.enums.EGenre;
 import com.bilgeadam.repository.AddressRepository;
 import com.bilgeadam.repository.PostRepository;
 import com.bilgeadam.repository.UserRepository;
@@ -17,6 +16,7 @@ import jakarta.persistence.criteria.Root;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /*
@@ -46,8 +46,8 @@ public class MainWithCascade {
             1- bir user olustrup databse e kayıt edelim
          */
         User user= User.builder()
-                   .firstName("Mustafa")
-                   .lastName("Öztürk")
+                .name(Name.builder().firstName("Mustafa")
+                        .lastName("Öztürk").build())
                    .username("mustafa222")
                    .birthDate(LocalDate.parse("1987-10-12"))
                    .postCount(18)
@@ -55,8 +55,8 @@ public class MainWithCascade {
                    .build();
 
         User user2= User.builder()
-                .firstName("Özge")
-                .lastName("Keskin")
+                .name(Name.builder().firstName("Özge")
+                        .lastName("Keskin").build())
                 .username("ozge")
                 .gender(EGender.WOMAN)
                 .postCount(8)
@@ -81,10 +81,20 @@ public class MainWithCascade {
         user.setPosts(List.of(post,post2,post3));
         user.setAddresses(addresses1);
         user2.setAddresses(addresses2);
+        user.setInterest(List.of("Müzik","Sinema"));
+        user2.setInterest(List.of("Dans","Tiyatro"));
+        Movie movie1= Movie.builder().title("Pulp Fiction").build();
+        Movie movie2= Movie.builder().title("Seven").build();
+        Movie movie3= Movie.builder().title("Ruhların Kaçışı").build();
+        Movie movie4= Movie.builder().title("Hızlı ve Öfkeli").build();
+
+        user.setEGenderMovieMap(Map.of(EGenre.DRAM,movie1,EGenre.ANIME,movie3));
+        user2.setEGenderMovieMap(Map.of(EGenre.AKSIYON,movie4,EGenre.DRAM,movie2));
 
 
 
-       userRepository.saveAll(List.of(user,user2));
+
+        userRepository.saveAll(List.of(user,user2));
 //addressRepository.saveAll(addresses1);
 //addressRepository.saveAll(addresses2);
 
